@@ -1,5 +1,25 @@
 <div class="home">
-  <div>
-    <img src="assets/imgs/tomato.svg" alt="Tomato icon">
-  </div>
+  <ng-container *ngIf="greetingsPage">
+    <div (click)="greetingsPage = false">
+      <img src="assets/imgs/tomato.svg" alt="Tomato icon">
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!greetingsPage">
+    <div class="home--pomodoro">
+      <div class="home--pomodoro--image">
+        <img src="assets/imgs/tomato.svg" alt="Tomato icon">
+      </div>
+
+      <div class="home--pomodoro--counter">
+          <span>00:00</span>
+      </div>
+
+      <div class="home--pomodoro--buttons">
+        <button type="button"> Pomodoro </button>
+        <button type="button"> Break </button>
+      </div>
+
+    </div>
+  </ng-container>
 </div>

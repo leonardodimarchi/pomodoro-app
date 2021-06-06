@@ -11,4 +11,14 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void { }
 
+
+  //#region Public Properties
+
+  /**
+   * Diz se
+   */
+  public greetingsPage: boolean = true;
+
+  //#endregion
+
 }

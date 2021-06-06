@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +24,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    CommonModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,
