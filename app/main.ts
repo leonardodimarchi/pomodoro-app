@@ -13,10 +13,14 @@ function createWindow(): BrowserWindow {
 
   // Create the browser window.
   win = new BrowserWindow({
-    x: 0,
-    y: 0,
-    width: 600,
-    height: 600,
+    title: 'Pomodoro APP',
+    darkTheme: true,
+    center: true,
+    width: 800,
+    height: 700,
+    maxWidth: 800,
+    maxHeight: 700,
+    maximizable: false,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve),
@@ -24,6 +28,8 @@ function createWindow(): BrowserWindow {
       enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
   });
+
+  win.removeMenu();
 
   if (serve) {
     require('electron-reload')(__dirname, {
