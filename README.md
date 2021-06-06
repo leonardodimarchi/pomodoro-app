@@ -1,4 +1,4 @@
-<img src=".github/imgs/tomato.svg" alt="Tomato Icon">
+<img src=".github/imgs/tomato.svg" alt="Tomato Icon" width="100">
 
 # Pomodoro APP
 
