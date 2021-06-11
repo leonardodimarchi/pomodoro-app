@@ -8,4 +8,55 @@ html, body {
 
 :root {
   --pomo-color-gray: #22272e;
+  --pomo-color-gray-dark: #0e1012;
 }
+
+.fade-in-2seconds {
+  animation: fadeIn 2s;
+}
+
+.fade-out-2seconds {
+  animation: fadeOutAndBlink 2s;
+}
+
+/** Keyframes **/
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutAndBlink {
+  0% {
+    filter: brightness(1.2);
+    opacity: 1;
+  }
+
+  10% {
+    filter: brightness(1);
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  0% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.2);
+  }
+
+  100% {
+    filter: brightness(1);
+  }
+}
+

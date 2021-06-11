@@ -15,10 +15,26 @@ export class HomeComponent implements OnInit {
   //#region Public Properties
 
   /**
-   * Diz se
+   * Diz se a página de boas vindas será mostrada
    */
   public greetingsPage: boolean = true;
 
+  /**
+   * Diz se a página de boas vidas está sendo apagada
+   */
+  public isTurningOffGreetings: boolean = false;
+
+  //#endregion
+
+  //#region Public Methods
+
+  public turnOffGreetings(): void {
+    this.isTurningOffGreetings = true;
+
+    setTimeout(()=> {
+      this.greetingsPage = false;
+    },1500);
+  }
   //#endregion
 
 }

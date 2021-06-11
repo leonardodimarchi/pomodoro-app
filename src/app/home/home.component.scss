@@ -8,17 +8,77 @@
 
   background-color: var(--pomo-color-gray);
 
+  &--greetings {
+    img {
+      cursor: pointer;
+
+      user-select: none;
+      -webkit-user-drag: none;
+
+      transition: opacity 2s;
+    }
+
+    img:hover {
+      filter: brightness(1.1);
+    }
+  }
+
   &--pomodoro {
 
     &--image {
       display: flex;
+      justify-content: center;
+
+      margin-bottom: 2rem;
 
       img {
-        width: 6rem;
+        width: 12rem;
         height: auto;
+
+        user-select: none;
+        -webkit-user-drag: none;
       }
     }
 
+    &--counter {
+      display: flex;
+      justify-content: center;
 
+      span {
+        font-size: 5rem;
+        color: white;
+      }
+    }
+
+    &--buttons {
+      margin-top: 2rem;
+
+      button {
+        width: 8rem;
+
+        cursor: pointer;
+
+        border: none;
+        border-radius: 20px;
+
+        padding: 1rem;
+
+        background-color: #F05B55;
+
+        color: white;
+        font-weight: bold;
+
+        box-shadow: 0 3px 5px 0 var(--pomo-color-gray-dark);
+
+        &:first-child {
+          margin-right: 1rem;
+          background-color: #009B72;
+        }
+
+        &:hover {
+          filter: brightness(1.1) !important;
+        }
+      }
+    }
   }
 }

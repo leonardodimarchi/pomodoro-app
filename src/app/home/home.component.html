@@ -1,18 +1,20 @@
 <div class="home">
   <ng-container *ngIf="greetingsPage">
-    <div (click)="greetingsPage = false">
-      <img src="assets/imgs/tomato.svg" alt="Tomato icon">
+    <div (click)="turnOffGreetings()" class="home--greetings" [class.fade-out-2seconds]="isTurningOffGreetings">
+      <img class="fade-in-2seconds" src="assets/imgs/tomato.svg" alt="Tomato icon">
     </div>
   </ng-container>
 
   <ng-container *ngIf="!greetingsPage">
-    <div class="home--pomodoro">
+    <div class="home--pomodoro fade-in-2seconds">
       <div class="home--pomodoro--image">
         <img src="assets/imgs/tomato.svg" alt="Tomato icon">
       </div>
 
       <div class="home--pomodoro--counter">
-          <span>00:00</span>
+        <span>00</span>
+        <span>:</span>
+        <span>00</span>
       </div>
 
       <div class="home--pomodoro--buttons">
