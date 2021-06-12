@@ -12,14 +12,14 @@
       </div>
 
       <div class="home--pomodoro--counter">
-        <span>00</span>
+        <span>{{ minutes < 10 ? '0' + minutes : minutes }}</span>
         <span>:</span>
-        <span>00</span>
+        <span>{{ seconds < 10 ? '0' + seconds : seconds }}</span>
       </div>
 
       <div class="home--pomodoro--buttons">
-        <button type="button"> Pomodoro </button>
-        <button type="button"> Break </button>
+        <button type="button" (click)="startStopPomodoro()"> {{ pomodoroIsRunning ? 'Reset' : 'Pomodoro'}} </button>
+        <button type="button" [class.button--disabled]="pomodoroIsRunning"> Break </button>
       </div>
 
     </div>
