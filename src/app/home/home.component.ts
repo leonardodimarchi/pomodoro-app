@@ -53,18 +53,36 @@ export class HomeComponent implements OnInit {
 
   //#region Public Methods
 
+  /**
+   * Começa ou reseta o tempo de pomodoro
+   */
   public startStopPomodoro(): void {
+    this.setPomodoroTime();
+
     if (this.pomodoroIsRunning) {
       this.pomodoroIsRunning = false;
-
-      this.minutes = 25;
-      this.seconds = 0;
       return;
     }
 
     this.pomodoroIsRunning = true;
 
-    this.startCounting(25, 0);
+    this.startCounting();
+  }
+
+  /**
+   * Começa ou reseta o tempo de descanso
+   */
+  public startStopBreakTime(): void {
+    this.setBreakTime();
+
+    if (this.breakTimeIsRunning) {
+      this.breakTimeIsRunning = false;
+      return;
+    }
+
+    this.breakTimeIsRunning = true;
+
+    this.startCounting();
   }
 
   /**
@@ -79,12 +97,9 @@ export class HomeComponent implements OnInit {
   }
 
   /**
-   * Contagem de segundos
+   * Realiza a contagem
    */
-  public startCounting(minutes: number, seconds: number): void {
-    this.seconds = seconds;
-    this.minutes = minutes;
-
+  public startCounting(): void {
     const counter = setInterval(() => {
       if (!this.pomodoroIsRunning && !this.breakTimeIsRunning) {
         clearInterval(counter);
@@ -93,8 +108,19 @@ export class HomeComponent implements OnInit {
 
       if (this.seconds === 0) {
 
-        if (this.minutes === 0)
+        if (this.minutes === 0) {
+
+          if (this.pomodoroIsRunning)
+            this.setBreakTime();
+
+          if (this.breakTimeIsRunning)
+            this.setPomodoroTime();
+
+          this.pomodoroIsRunning = false;
+          this.breakTimeIsRunning = false;
+
           return;
+        }
 
         this.seconds = 60;
         this.minutes--;
@@ -102,6 +128,22 @@ export class HomeComponent implements OnInit {
 
       this.seconds--;
     }, 1000);
+  }
+
+  /**
+   * Reseta o tempo para o tempo de descanso
+   */
+  public setBreakTime(): void {
+    this.minutes = 5;
+    this.seconds = 0;
+  }
+
+  /**
+   * Reseta o tempo para o tempo de pomodoro
+   */
+  public setPomodoroTime(): void {
+    this.minutes = 25;
+    this.seconds = 0;
   }
 
   //#endregion

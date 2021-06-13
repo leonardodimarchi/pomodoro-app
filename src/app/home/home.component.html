@@ -18,8 +18,8 @@
       </div>
 
       <div class="home--pomodoro--buttons">
-        <button type="button" (click)="startStopPomodoro()"> {{ pomodoroIsRunning ? 'Reset' : 'Pomodoro'}} </button>
-        <button type="button" [class.button--disabled]="pomodoroIsRunning"> Break </button>
+        <button type="button" [class.button--disabled]="breakTimeIsRunning" (click)="startStopPomodoro()"> {{ pomodoroIsRunning ? 'Reset' : 'Pomodoro'}} </button>
+        <button type="button" [class.button--disabled]="pomodoroIsRunning" (click)="startStopBreakTime()"> {{ breakTimeIsRunning ? 'Reset' : 'Break'}} </button>
       </div>
 
     </div>
