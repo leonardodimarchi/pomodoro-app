@@ -1,6 +1,7 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain, IpcMainEvent, Menu, Tray } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import { TimeUpdateInterface } from '../src/app/shared/interfaces/time-update.interface';
 
 // Initialize remote module
 require('@electron/remote/main').initialize();
@@ -21,11 +22,12 @@ function createWindow(): BrowserWindow {
     maxWidth: 800,
     maxHeight: 700,
     maximizable: false,
+    skipTaskbar: true,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve),
       contextIsolation: false,  // false if you want to run 2e2 test with Spectron
-      enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
+      enableRemoteModule: true, // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
   });
 
@@ -33,7 +35,7 @@ function createWindow(): BrowserWindow {
 
   if (serve) {
     require('electron-reload')(__dirname, {
-      electron: require(`${__dirname}/../node_modules/electron`)
+      electron: require(`${ __dirname }/../node_modules/electron`),
     });
     win.loadURL('http://localhost:4200');
 
@@ -41,7 +43,7 @@ function createWindow(): BrowserWindow {
     win.loadURL(url.format({
       pathname: path.join(__dirname, '../dist/index.html'),
       protocol: 'file:',
-      slashes: true
+      slashes: true,
     }));
   }
 
@@ -61,7 +63,15 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => setTimeout(createWindow, 400));
+  let tray: Tray | null = null;
+  app.on('ready', () => {
+    tray = new Tray(path.join(__dirname, '../src/assets/icons/favicon.ico'));
+    initTray(tray);
+    createWindow();
+
+    win.focus();
+    win.show();
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
@@ -83,4 +93,70 @@ try {
 } catch (e) {
   // Catch Error
   // throw e;
+}
+
+/**
+ * Inicia as tarefas da Tray
+ */
+function initTray(tray: Tray): void {
+  const contextMenu = getUpdatedContextMenuTime(25, 0);
+
+  tray.setToolTip('Pomodoro');
+
+  tray.setContextMenu(contextMenu);
+  setTrayListeners(tray, contextMenu);
+
+  ipcMain.on('TIME_UPDATE', (event: IpcMainEvent, data: TimeUpdateInterface) => {
+    const newContextMenu = getUpdatedContextMenuTime(data.minutes, data.seconds);
+
+    tray.setContextMenu(newContextMenu);
+    setTrayListeners(tray, newContextMenu);
+  });
+
+  ipcMain.on('TIME_DONE', (event, data: string) => {
+    const newContextMenu = Menu.buildFromTemplate([
+      { label: data, type: 'normal' },
+    ]);
+
+    tray.setContextMenu(newContextMenu);
+    tray.popUpContextMenu(newContextMenu);
+
+    setTimeout(() => {
+      tray.closeContextMenu();
+    }, 2000);
+
+    setTrayListeners(tray);
+  });
+}
+
+/**
+ * Abre e minimiza o app
+ */
+function toggleApp(): void {
+  if (win.isVisible())
+    win.hide();
+  else
+    win.show();
+}
+
+/**
+ * Atualiza e retorna um novo menu com tempo atualizado
+ * @param minutes Os minutos
+ * @param seconds Os segundos
+ */
+function getUpdatedContextMenuTime(minutes: number, seconds: number): Menu {
+  return Menu.buildFromTemplate([
+    { label: minutes >= 10 ? minutes.toString() : `0${ minutes }`, type: 'normal' },
+    { label: seconds >= 10 ? seconds.toString() : `0${ seconds }`, type: 'normal' },
+  ]);
+}
+
+/**
+ * Adiciona os listeners no Tray Icon
+ */
+function setTrayListeners(tray: Tray, menu?: Menu): void {
+  tray.removeAllListeners();
+  if (menu)
+    tray.on('click', () => tray.popUpContextMenu(menu));
+  tray.on('double-click', toggleApp);
 }

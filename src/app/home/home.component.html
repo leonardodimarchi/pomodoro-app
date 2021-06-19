@@ -12,9 +12,9 @@
       </div>
 
       <div class="home--pomodoro--counter">
-        <span>{{ minutes < 10 ? '0' + minutes : minutes }}</span>
+        <span>{{ counter.minutes < 10 ? '0' + counter.minutes : counter.minutes }}</span>
         <span>:</span>
-        <span>{{ seconds < 10 ? '0' + seconds : seconds }}</span>
+        <span>{{ counter.seconds < 10 ? '0' + counter.seconds : counter.seconds }}</span>
       </div>
 
       <div class="home--pomodoro--buttons">

@@ -1,21 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { ElectronService } from '../core/services';
+import { TimeUpdateInterface } from '../shared/interfaces/time-update.interface';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
-  constructor() { }
-
-  //#region Lifecycle Events
-
-  public ngOnInit(): void {
-
-  }
-
-  //#endregion
+  constructor(
+    private readonly electronService: ElectronService,
+  ) { }
 
   //#region Public Properties
 
@@ -30,14 +26,12 @@ export class HomeComponent implements OnInit {
   public isTurningOffGreetings: boolean = false;
 
   /**
-   * Contagem de minutos
+   * Contagem
    */
-  public minutes: number = 25;
-
-  /**
-   * Contagem de segundos
-   */
-  public seconds: number = 0;
+  public counter: TimeUpdateInterface = {
+    minutes: 25,
+    seconds: 0,
+  };
 
   /**
    * Diz se o tempo para o pomodoro esta rodando
@@ -101,20 +95,26 @@ export class HomeComponent implements OnInit {
    */
   public startCounting(): void {
     const counter = setInterval(() => {
+      this.emitTimeToTray();
+
       if (!this.pomodoroIsRunning && !this.breakTimeIsRunning) {
         clearInterval(counter);
         return;
       }
 
-      if (this.seconds === 0) {
+      if (this.counter.seconds === 0) {
 
-        if (this.minutes === 0) {
+        if (this.counter.minutes === 0) {
 
-          if (this.pomodoroIsRunning)
+          if (this.pomodoroIsRunning) {
+            this.electronService.ipcRenderer.send('TIME_DONE', 'Pomodoro is over');
             this.setBreakTime();
+          }
 
-          if (this.breakTimeIsRunning)
+          if (this.breakTimeIsRunning) {
+            this.electronService.ipcRenderer.send('TIME_DONE', 'Break is over');
             this.setPomodoroTime();
+          }
 
           this.pomodoroIsRunning = false;
           this.breakTimeIsRunning = false;
@@ -122,11 +122,11 @@ export class HomeComponent implements OnInit {
           return;
         }
 
-        this.seconds = 60;
-        this.minutes--;
+        this.counter.seconds = 60;
+        this.counter.minutes--;
       }
 
-      this.seconds--;
+      this.counter.seconds--;
     }, 1000);
   }
 
@@ -134,16 +134,23 @@ export class HomeComponent implements OnInit {
    * Reseta o tempo para o tempo de descanso
    */
   public setBreakTime(): void {
-    this.minutes = 5;
-    this.seconds = 0;
+    this.counter.minutes = 5;
+    this.counter.seconds = 0;
   }
 
   /**
    * Reseta o tempo para o tempo de pomodoro
    */
   public setPomodoroTime(): void {
-    this.minutes = 25;
-    this.seconds = 0;
+    this.counter.minutes = 0;
+    this.counter.seconds = 10;
+  }
+
+  /**
+   * Método que emite o contador para a barra de tarefas
+   */
+  public emitTimeToTray(): void {
+    this.electronService.ipcRenderer.send('TIME_UPDATE', this.counter);
   }
 
   //#endregion
