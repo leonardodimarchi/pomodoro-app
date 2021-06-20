@@ -95,7 +95,6 @@ export class HomeComponent {
    */
   public startCounting(): void {
     const counter = setInterval(() => {
-      this.emitTimeToTray();
 
       if (!this.pomodoroIsRunning && !this.breakTimeIsRunning) {
         clearInterval(counter);
@@ -109,11 +108,13 @@ export class HomeComponent {
           if (this.pomodoroIsRunning) {
             this.electronService.ipcRenderer.send('TIME_DONE', 'Pomodoro is over');
             this.setBreakTime();
+            this.playSound('../../assets/sounds/beep_1.mp3');
           }
 
           if (this.breakTimeIsRunning) {
             this.electronService.ipcRenderer.send('TIME_DONE', 'Break is over');
             this.setPomodoroTime();
+            this.playSound('../../assets/sounds/beep_2.mp3');
           }
 
           this.pomodoroIsRunning = false;
@@ -134,8 +135,8 @@ export class HomeComponent {
    * Reseta o tempo para o tempo de descanso
    */
   public setBreakTime(): void {
-    this.counter.minutes = 5;
-    this.counter.seconds = 0;
+    this.counter.minutes = 0;
+    this.counter.seconds = 8;
   }
 
   /**
@@ -143,7 +144,7 @@ export class HomeComponent {
    */
   public setPomodoroTime(): void {
     this.counter.minutes = 0;
-    this.counter.seconds = 10;
+    this.counter.seconds = 5;
   }
 
   /**
@@ -151,6 +152,16 @@ export class HomeComponent {
    */
   public emitTimeToTray(): void {
     this.electronService.ipcRenderer.send('TIME_UPDATE', this.counter);
+  }
+
+  /**
+   * Toca um audio
+   */
+  public playSound(audioSrc: string): void {
+    const audio = new Audio(audioSrc);
+
+    audio.load();
+    audio.play();
   }
 
   //#endregion

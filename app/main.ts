@@ -115,11 +115,14 @@ function initTray(tray: Tray): void {
 
   ipcMain.on('TIME_DONE', (event, data: string) => {
     const newContextMenu = Menu.buildFromTemplate([
-      { label: data, type: 'normal' },
+      { label: data, type: 'normal', icon: path.join(__dirname, '../src/assets/icons/favicon.png') },
     ]);
 
     tray.setContextMenu(newContextMenu);
-    tray.popUpContextMenu(newContextMenu);
+    tray.popUpContextMenu(newContextMenu, {
+      x: tray.getBounds().x - tray.getBounds().width,
+      y: tray.getBounds().y,
+    });
 
     setTimeout(() => {
       tray.closeContextMenu();
@@ -156,7 +159,5 @@ function getUpdatedContextMenuTime(minutes: number, seconds: number): Menu {
  */
 function setTrayListeners(tray: Tray, menu?: Menu): void {
   tray.removeAllListeners();
-  if (menu)
-    tray.on('click', () => tray.popUpContextMenu(menu));
-  tray.on('double-click', toggleApp);
+  tray.on('click', toggleApp);
 }
