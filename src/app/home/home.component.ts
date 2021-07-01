@@ -96,6 +96,8 @@ export class HomeComponent {
   public startCounting(): void {
     const counter = setInterval(() => {
 
+      this.emitTimeToTray();
+      
       if (!this.pomodoroIsRunning && !this.breakTimeIsRunning) {
         clearInterval(counter);
         return;
