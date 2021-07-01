@@ -135,16 +135,16 @@ export class HomeComponent {
    * Reseta o tempo para o tempo de descanso
    */
   public setBreakTime(): void {
-    this.counter.minutes = 0;
-    this.counter.seconds = 8;
+    this.counter.minutes = 5;
+    this.counter.seconds = 0;
   }
 
   /**
    * Reseta o tempo para o tempo de pomodoro
    */
   public setPomodoroTime(): void {
-    this.counter.minutes = 0;
-    this.counter.seconds = 5;
+    this.counter.minutes = 25;
+    this.counter.seconds = 0;
   }
 
   /**

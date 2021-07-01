@@ -41,10 +41,12 @@ function createWindow(): BrowserWindow {
 
   } else {
     win.loadURL(url.format({
-      pathname: path.join(__dirname, '../dist/index.html'),
+      pathname: path.join(__dirname, '../index.html'),
       protocol: 'file:',
       slashes: true,
     }));
+
+    win.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.
@@ -65,7 +67,11 @@ try {
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   let tray: Tray | null = null;
   app.on('ready', () => {
-    tray = new Tray(path.join(__dirname, '../src/assets/icons/favicon.ico'));
+    if (app.isPackaged) {
+      tray = new Tray(path.join(process.resourcesPath, 'favicon.ico'));
+    } else {
+      tray = new Tray(path.join(__dirname, '../src/assets/icons/favicon.ico'));
+    }
     initTray(tray);
     createWindow();
 

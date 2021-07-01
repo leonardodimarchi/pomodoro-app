@@ -1,7 +1,7 @@
 {
-  "name": "pomodoro-app",
+  "name": "Pomodoro_App",
   "version": "1.0.0",
-  "description": "easy to use pomodoro technique timer app",
+  "description": "Easy to use pomodoro technique timer app",
   "homepage": "https://github.com/leonardodimarchi/pomodoro-app",
   "author": {
     "name": "Leonardo Dimarchi",
@@ -23,6 +23,29 @@
   ],
   "main": "app/main.js",
   "private": true,
+  "build":{
+    "productName": "Pomodoro App",
+    "directories":{
+      "buildResources":"resources",
+      "output": "dist"
+    },
+    "extraFiles": [
+      {
+        "from": "./src/assets/icons",
+        "to": "resources",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "./build/",
+        "to": "resources",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "ng": "ng",
