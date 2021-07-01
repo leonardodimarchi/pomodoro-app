@@ -28,7 +28,7 @@ $ npm i
 
 ```
 
-#### And then build Angular webContent, along with (Electron builder)[https://www.electron.build/]
+#### And then build Angular webContent, along with [Electron builder](https://www.electron.build/)
 
 ```
 
