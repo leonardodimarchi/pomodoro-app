@@ -97,7 +97,7 @@ export class HomeComponent {
     const counter = setInterval(() => {
 
       this.emitTimeToTray();
-      
+
       if (!this.pomodoroIsRunning && !this.breakTimeIsRunning) {
         clearInterval(counter);
         return;
