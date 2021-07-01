@@ -46,7 +46,7 @@ function createWindow(): BrowserWindow {
       slashes: true,
     }));
 
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.
