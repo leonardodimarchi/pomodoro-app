@@ -21,6 +21,8 @@ function createWindow(): BrowserWindow {
     height: 700,
     maxWidth: 800,
     maxHeight: 700,
+    minWidth: 800,
+    minHeight: 700,
     maximizable: false,
     skipTaskbar: true,
     webPreferences: {
@@ -126,10 +128,11 @@ function initTray(tray: Tray): void {
 
   ipcMain.on('TIME_DONE', (event, data: string) => {
     const newContextMenu = Menu.buildFromTemplate([
-      { label: data, type: 'normal', icon: app.isPackaged ? path.join(process.resourcesPath, 'icon.png') : path.join(__dirname, '../src/assets/icons/favicon.png') },
+      { label: data, type: 'normal', icon: app.isPackaged ? path.join(process.resourcesPath, 'assets/icons/favicon.png') : path.join(__dirname, '../src/assets/icons/favicon.png') },
     ]);
 
     win.show();
+    win.center();
 
     tray.setContextMenu(newContextMenu);
     tray.popUpContextMenu(newContextMenu, {
