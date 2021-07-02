@@ -97,7 +97,7 @@ export class HomeComponent {
     const counter = setInterval(() => {
 
       this.emitTimeToTray();
-      
+
       if (!this.pomodoroIsRunning && !this.breakTimeIsRunning) {
         clearInterval(counter);
         return;
@@ -109,14 +109,20 @@ export class HomeComponent {
 
           if (this.pomodoroIsRunning) {
             this.electronService.ipcRenderer.send('TIME_DONE', 'Pomodoro is over');
-            this.setBreakTime();
             this.playSound('../../assets/sounds/beep_1.mp3');
+            this.pomodoroIsRunning = false;
+
+            this.setBreakTime();
+            setTimeout(() => this.startStopBreakTime(),1500);
           }
 
           if (this.breakTimeIsRunning) {
             this.electronService.ipcRenderer.send('TIME_DONE', 'Break is over');
-            this.setPomodoroTime();
             this.playSound('../../assets/sounds/beep_2.mp3');
+            this.breakTimeIsRunning = false;
+
+            this.setPomodoroTime();
+            setTimeout(() => this.startStopPomodoro(),1500);
           }
 
           this.pomodoroIsRunning = false;

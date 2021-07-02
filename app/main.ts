@@ -24,6 +24,7 @@ function createWindow(): BrowserWindow {
     maximizable: false,
     skipTaskbar: true,
     webPreferences: {
+      backgroundThrottling: false,
       nodeIntegration: true,
       allowRunningInsecureContent: (serve),
       contextIsolation: false,  // false if you want to run 2e2 test with Spectron
@@ -50,11 +51,12 @@ function createWindow(): BrowserWindow {
   }
 
   // Emitted when the window is closed.
-  win.on('closed', () => {
+  win.on('close', (e: CloseEvent) => {
     // Dereference the window object, usually you would store window
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    win = null;
+    e.preventDefault();
+    win.hide();
   });
 
   return win;
@@ -80,11 +82,14 @@ try {
   });
 
   // Quit when all windows are closed.
-  app.on('window-all-closed', () => {
+  win.on('closed', () => {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
-      app.quit();
+      if (win)
+        win.hide();
+      else
+        app.quit();
     }
   });
 
@@ -121,8 +126,10 @@ function initTray(tray: Tray): void {
 
   ipcMain.on('TIME_DONE', (event, data: string) => {
     const newContextMenu = Menu.buildFromTemplate([
-      { label: data, type: 'normal', icon: path.join(__dirname, '../src/assets/icons/favicon.png') },
+      { label: data, type: 'normal', icon: app.isPackaged ? path.join(process.resourcesPath, 'icon.png') : path.join(__dirname, '../src/assets/icons/favicon.png') },
     ]);
+
+    win.show();
 
     tray.setContextMenu(newContextMenu);
     tray.popUpContextMenu(newContextMenu, {
@@ -139,24 +146,18 @@ function initTray(tray: Tray): void {
 }
 
 /**
- * Abre e minimiza o app
- */
-function toggleApp(): void {
-  if (win.isVisible())
-    win.hide();
-  else
-    win.show();
-}
-
-/**
  * Atualiza e retorna um novo menu com tempo atualizado
  * @param minutes Os minutos
  * @param seconds Os segundos
  */
 function getUpdatedContextMenuTime(minutes: number, seconds: number): Menu {
   return Menu.buildFromTemplate([
-    { label: minutes >= 10 ? minutes.toString() : `0${ minutes }`, type: 'normal' },
-    { label: seconds >= 10 ? seconds.toString() : `0${ seconds }`, type: 'normal' },
+    { label: `${ minutes >= 10 ? minutes.toString() : `0${ minutes }` }: ${ seconds >= 10 ? seconds.toString() : `0${ seconds }` }`, type: 'normal' },
+    {
+      label: 'Quit', type: 'normal', role: 'close', click: () => {
+        win.destroy();
+      },
+    },
   ]);
 }
 
@@ -165,5 +166,5 @@ function getUpdatedContextMenuTime(minutes: number, seconds: number): Menu {
  */
 function setTrayListeners(tray: Tray, menu?: Menu): void {
   tray.removeAllListeners();
-  tray.on('click', toggleApp);
+  tray.on('click', () => win.show());
 }
