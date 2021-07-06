@@ -10,6 +10,12 @@ It uses a timer to break down work into intervals, 25 minutes, separated by shor
 
 Each interval is known as a pomodoro, from the Italian word for 'tomato'.
 
+#### And the app ?
+
+It is a simple app that works like a timer that runs in the background, that opens by the tray icon. Built in Angular2+ and ElectronJS.
+
+<img src=".github/imgs/pomodoro.png">
+
 ### How to build
 
 #### Clone the repo
